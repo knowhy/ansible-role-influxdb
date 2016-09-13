@@ -1,7 +1,7 @@
 ---
 # tasks file for ansible-role-influxdb
 
-- name: Download and extract influxdb binary.
+- name: Download and extract InfluxDB binary.
   unarchive:
     src: "https://dl.influxdata.com/influxdb/releases/influxdb-{{ influxdb_version }}_linux_amd64.tar.gz"
     dest: /opt/
