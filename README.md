@@ -1,4 +1,4 @@
-Role Name
+ansible-role-influxdb
 =========
 
 Ansible role to install InfluxDB database.
