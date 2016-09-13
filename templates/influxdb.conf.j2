@@ -180,7 +180,7 @@ hostname = "{{ influxdb_hostname }}"
   # otherwise you could get dropped metrics or poor performance. Batching
   # will buffer points in memory if you have many coming in.
 
-  batch-size = {{ influxdb_graphite_batch-size }}
+  batch-size = {{ influxdb_graphite_batch_size }}
   batch-pending = {{ influxdb_graphite_batch_pending }}
   batch-timeout = "{{ influxdb_graphite_batch_timeout }}"
   udp-read-buffer = {{ influxdb_graphite_udp_read_buffer }}

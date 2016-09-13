@@ -80,7 +80,7 @@ influxdb_graphite_bind_address: ":2003"
 influxdb_graphite_protocol: tcp
 influxdb_graphite_consistency_level: one
 
-influxdb_graphite_batch-size: 5000
+influxdb_graphite_batch_size: 5000
 influxdb_graphite_batch_pending: 10
 influxdb_graphite_batch_timeout: 1s
 influxdb_graphite_udp_read_buffer: 0
@@ -103,11 +103,11 @@ influxdb_collectd_read_buffer: 0
 influxdb_opentsdb_enabled: False
 influxdb_opentsdb_bind_address: ":4242"
 influxdb_opentsdb_database: opentsdb
-influxdb_opentsdb_retention-policy: ""
-influxdb_opentsdb_consistency-level: one
-influxdb_opentsdb_tls-enabled: False
+influxdb_opentsdb_retention_policy: ""
+influxdb_opentsdb_consistency_level: one
+influxdb_opentsdb_tls_enabled: False
 influxdb_opentsdb_certificate: ""
-influxdb_opentsdb_log-point-errors: True
+influxdb_opentsdb_log_point_errors: True
 influxdb_opentsdb_batch_size: 1000
 influxdb_opentsdb_batch_pending: 5
 influxdb_opentsdb_batch_timeout: "1s"
