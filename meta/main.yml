@@ -1,0 +1,16 @@
+galaxy_info:
+  author: knowhy
+  description: Ansible role to install InfluxDB time-series data storage.
+
+  license: BSD
+
+  min_ansible_version: 1.6
+
+  platforms:
+  - name: GenericLinux
+    versions:
+    - all
+
+  galaxy_tags: [influxbdb influx db timeseries]
+
+dependencies: []
