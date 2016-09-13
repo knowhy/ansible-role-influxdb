@@ -11,6 +11,4 @@ galaxy_info:
     versions:
     - all
 
-  galaxy_tags: [influxbdb influx db timeseries]
-
 dependencies: []
