@@ -1,0 +1,29 @@
+[Unit]
+Description=InfluxDB is an open-source, distributed, time series database
+Documentation=https://docs.influxdata.com/influxdb/
+After=network.target
+
+[Service]
+User={{ influxdb_user }}
+Group={{ influxdb_group }}
+LimitNOFILE=65536
+{% if influxdb_log_stdout_enabled %}
+Environment='STDOUT={{ influxdb_log_path }}/{{ influxdb_log_stdout_file }}'
+{% else %}
+Environment='STDOUT=/dev/null'
+{% endif %}
+{% if influxdb_log_stderr_enabled %}
+Environment='STDERR={{ influxdb_log_path }}/{{ influxdb_log_stderr_file }}'
+{% else %}
+Environment='STDERR=/dev/null'
+{% endif %}
+EnvironmentFile=-/etc/default/influxdb
+ExecStart=/bin/sh -c "/opt/influxdb-{{ influxdb_version }}-1/usr/bin/influxd -config /etc/influxdb/influxdb.conf ${INFLUXD_OPTS} >>${STDOUT} 2>>${STDERR}"
+KillMode=control-group
+Restart=on-failure
+Type=fork
+NotifyAccess=all
+
+[Install]
+WantedBy=multi-user.target
+Alias=influxd.service
