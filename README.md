@@ -5,7 +5,7 @@ ansible-role-influxdb
 
 Ansible role to install InfluxDB database.
 
-This role deploys a single InfluxDB instance. The role uses the InfluxDB release artifacts from [influxDB homepage](https://dl.influxdata.com/influxdb/releases) and should work with any Linux distribution which supports Systemd.
+This role deploys a single InfluxDB instance. The role uses the InfluxDB release artifacts from [influxDB homepage](https://dl.influxdata.com/influxdb/releases).
 
 Most of the configuration is done in the `influxdb.conf` file. `defaults/main.yml` contains the default values from the config shipped with the release artifact.
 
