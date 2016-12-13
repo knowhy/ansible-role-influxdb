@@ -1,0 +1,13 @@
+description "Influxdb"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+respawn
+respawn limit 10 5
+
+limit nofile unlimited unlimited
+
+console log
+
+exec start-stop-daemon --chuid {{ influxdb_user }} --start --exec "/opt/influxdb-{{ influxdb_version }}-1/usr/bin/influxdb" -- -config=/etc/influxdb/influxdb.conf

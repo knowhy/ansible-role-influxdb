@@ -39,6 +39,13 @@
     dest: /etc/init.d/influxdb
     mode: 0700  
   when: ansible_service_mgr == 'sysv'
+
+- name: Ensure upstart script is present.
+  template:
+    src: influxdb.upstart.j2
+    dest: /etc/init/influxdb.conf
+    mode: 0700
+  when: ansible_service_mgr == 'upstart'
   
 - name: Set command options.
   template:
