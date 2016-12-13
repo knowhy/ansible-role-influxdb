@@ -1,12 +1,16 @@
 ---
 # tasks file for ansible-role-influxdb
 
-- name: Download and extract InfluxDB binary.
+- name: Download InfluxDB binary.
+  get_url:
+    url: "https://dl.influxdata.com/influxdb/releases/influxdb-{{ influxdb_version }}_linux_{{ influxdb_cpu_arch }}.tar.gz"
+    dest: "/opt/influxdb-{{ influxdb_version }}_linux_{{ influxdb_cpu_arch }}.tar.gz"
+
+- name: Extract InfluxDB binary.
   unarchive:
-    src: "https://dl.influxdata.com/influxdb/releases/influxdb-{{ influxdb_version }}_linux_amd64.tar.gz"
+    src: "/opt/influxdb-{{ influxdb_version }}_linux_{{ influxdb_cpu_arch }}.tar.gz"
     dest: /opt/
     copy: False
-    creates: "/opt/influxdb-{{ influxdb_version }}-1/"
     
 - name: Create InfluxDB user.
   user:
