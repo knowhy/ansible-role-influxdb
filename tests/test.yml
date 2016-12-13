@@ -13,8 +13,8 @@
       wait_for:
         port: "{{ item }}"
       with_items:
-        - "{{ influxdb_admin_bind_address }}"
-        - "{{ influxdb_http_bind_address }}"
+        - 8083
+        - 8086
 
     - name: Create test database.
       influxdb_database:
