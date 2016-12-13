@@ -124,33 +124,33 @@ The maximum points per block, defaults to `1000`.
 
 	influxdb_data_max_points_per_block: 1000
 
-The time within which a remote shard must respond to a write request, defaults to `5s`.
+The default time a write request will wait until a "timeout" error is returned to the caller.
 
-	influxdb_cluster_shard_writer_timeout: 5s
+	influxdb_coordinator_write_timeout: 10s
 
-The time within which a write request must complete on the cluster, defaults to `10s`.
+The maximum number of concurrent queries allowed to be executing at one time.  If a query is executed and exceeds this limit, an error is returned to the caller.  This limit can be disabled by setting it to 0.
 
-	influxdb_cluster_write_timeout: 10s
+	influxdb_coordinator_max_concurrent_queries: 0
 
-The maximum number of concurrent queries that can run, set to `0` to disable, defaults to `0`.
+The maximum time a query will is allowed to execute before being killed by the system.  This limit can help prevent run away queries.  Setting the value to 0 disables the limit.
 
-	influxdb_cluster_max_concurrent_queries: 0
+	influxdb_coordinator_query_timeout: 0s
 
-The time within a query must complete before being killed automatically, set to `0s` to disable, defaults to `0s`.
+The the time threshold when a query will be logged as a slow query.  This limit can be set to help discover slow or resource intensive queries.  Setting the value to 0 disables the slow query logging.
 
-	influxdb_cluster_query_timeout: 0s
+	influxdb_coordinator_log_queries_after: 0s
 
-The maximum number of points to scan in a query, set to `0` to disable, defaults to `0`.
+The maximum number of points a SELECT can process.  A value of 0 will make the maximum point count unlimited.
 
-	influxdb_cluster_max_select_point: 0
+	influxdb_coordinator_max_select_point: 0
 
-The maximum number of series to select in a query, set to `0` to disable, defaults to `0`.
+The maximum number of series a SELECT can run.  A value of 0 will make the maximum series count unlimited.
 
-	influxdb_cluster_max_select_series: 0
+	influxdb_coordinator_max_select_series: 0
 
-The maximum number of buckets to select in an aggregate query, set to `0` to disable, defaults to `0`.
+The maxium number of group by time bucket a SELECt can create.  A value of zero will max the maximum number of buckets unlimited.
 
-	influxdb_cluster_max_select_buckets: 0
+	influxdb_coordinator_max_select_buckets: 0
 
 Controls the enforcement of retention policies for evicting old data, boolean, defaults to `True`.
 
@@ -424,7 +424,7 @@ Example Playbook
 
     - hosts: servers
       roles:
-         - { role: henrikpingel.influxdb }
+         - { role: knowhy.influxdb }
 
 License
 -------
@@ -435,4 +435,3 @@ Author Information
 ------------------
 
 This role was created in 2016 by Henrik Pingel.
-

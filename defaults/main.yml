@@ -42,13 +42,15 @@ influxdb_data_compact_min_file_count: 3
 influxdb_data_compact_full_write_cold_duration: 24h
 influxdb_data_max_points_per_block: 1000
 
-influxdb_cluster_shard_writer_timeout: 5s
-influxdb_cluster_write_timeout: 10s
-influxdb_cluster_max_concurrent_queries: 0
-influxdb_cluster_query_timeout: 0s
-influxdb_cluster_max_select_point: 0
-influxdb_cluster_max_select_series: 0
-influxdb_cluster_max_select_buckets: 0
+influxdb_coordinator: False
+influxdb_coordinator_write_timeout: 10s
+influxdb_coordinator_max_concurrent_queries: 0
+influxdb_coordinator_query_timeout: 0s
+influxdb_coordinator_log_queries_after: 0s
+influxdb_coordinator_max_select_point: 0
+influxdb_coordinator_max_select_series: 0
+influxdb_coordinator_max_select_buckets: 0
+
 
 influxdb_retention_enabled: True
 influxdb_retention_check_interval: 30m

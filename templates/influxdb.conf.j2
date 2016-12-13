@@ -80,21 +80,20 @@ hostname = "{{ influxdb_hostname }}"
   max-points-per-block = {{ influxdb_data_max_points_per_block }}
 
 ###
-### [cluster]
+### [coordinator]
 ###
-### Controls non-Raft cluster behavior, which generally includes how data is
-### shared across shards.
+### Controls the clustering service configuration.
 ###
-
-[cluster]
-  shard-writer-timeout = "{{ influxdb_cluster_shard_writer_timeout }}" # The time within which a remote shard must respond to a write request.
-  write-timeout = "{{ influxdb_cluster_write_timeout }}" # The time within which a write request must complete on the cluster.
-  max-concurrent-queries = {{ influxdb_cluster_max_concurrent_queries }} # The maximum number of concurrent queries that can run. 0 to disable.
-  query-timeout = "{{ influxdb_cluster_query_timeout }}" # The time within a query must complete before being killed automatically. 0s to disable.
-  max-select-point = {{ influxdb_cluster_max_select_point }} # The maximum number of points to scan in a query. 0 to disable.
-  max-select-series = {{ influxdb_cluster_max_select_series }} # The maximum number of series to select in a query. 0 to disable.
-  max-select-buckets = {{ influxdb_cluster_max_select_buckets }} # The maximum number of buckets to select in an aggregate query. 0 to disable.
-
+{% if influxdb_coordinator %}
+[coordinator]
+  write-timeout = "{{ influxdb_coordinator_write_timeout }}"
+  max-concurrent-queries = {{ influxdb_coordinator_max_concurrent_queries }}
+  query-timeout = "{{ influxdb_coordinator_query_timeout }}"
+  log-queries-after = "{{ influxdb_coordinator_log_queries_after }}"
+  max-select-point = {{ influxdb_coordinator_max_select_point }}
+  max-select-series = {{ influxdb_coordinator_max_select_series }}
+  max-select-buckets = {{ influxdb_coordinator_max_select_buckets }}
+{% endif %}
 ###
 ### [retention]
 ###
