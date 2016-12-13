@@ -12,6 +12,7 @@
     - name: Check if InfluxDB is listening to network ports.
       wait_for:
         port: "{{ item }}"
+        delay: 300
       with_items:
         - 8083
         - 8086
