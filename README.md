@@ -1,6 +1,8 @@
 ansible-role-influxdb
 =========
 
+[![Build Status](https://travis-ci.org/knowhy/ansible-role-influxdb.svg?branch=master)](https://travis-ci.org/knowhy/ansible-role-influxdb)
+
 Ansible role to install InfluxDB database.
 
 This role deploys a single InfluxDB instance. The role uses the InfluxDB release artifacts from [influxDB homepage](https://dl.influxdata.com/influxdb/releases) and should work with any Linux distribution which supports Systemd or sysv.
