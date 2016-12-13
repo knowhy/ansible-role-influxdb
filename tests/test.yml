@@ -1,5 +1,8 @@
 ---
-- hosts: localhost
-  remote_user: root
+- hosts: all
+
+  vars:
+    nginx_use_ppa: true
+
   roles:
-    - ansible-role-influxdb
+    - role_under_test
