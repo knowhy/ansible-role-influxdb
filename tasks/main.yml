@@ -24,15 +24,11 @@
       template:
         src: influxdb.service.j2
         dest: /usr/lib/systemd/system/influxdb.service
-      register: influxdb_unit
 
-    - name: Reload systemd.
-      command: systemctl daemon-reload
-      when: "{{ influxdb_unit | changed }}"
-
-    - name: Enable InfluxDB at boot.
-      service:
+    - name: Ensure InfluxDB is enabled at boot.
+      systemd:
         name: influxdb
+        daemon_reload: True
         enabled: True
 
   when: ansible_service_mgr == 'systemd'
