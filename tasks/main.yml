@@ -68,7 +68,7 @@
     owner: "{{ influxdb_user }}"
     group: "{{ influxdb_group }}"
     recurse: True
-    mode: 0750
+    mode: u=rwX,g=rX,o=r
   with_items:
     - "{{ influxdb_meta_data_dir }}"
     - "{{ influxdb_data_dir }}"
