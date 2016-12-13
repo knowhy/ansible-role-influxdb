@@ -6,3 +6,18 @@
 
   roles:
     - role_under_test
+
+  tasks:
+
+    - name: Check if InfluxDB is listening to network ports.
+      wait_for:
+        port: "{{ item }}"
+      with_items:
+        - "{{ influxdb_admin_bind_address }}"
+        - "{{ influxdb_http_bind_address }}"
+
+    - name: Create test database.
+      influxdb_database:
+      hostname: localhost
+      database_name: test_database
+      state: present
