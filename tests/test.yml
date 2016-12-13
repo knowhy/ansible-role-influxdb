@@ -18,6 +18,6 @@
 
     - name: Create test database.
       influxdb_database:
-      hostname: localhost
-      database_name: test_database
-      state: present
+        hostname: localhost
+        database_name: test_database
+        state: present
