@@ -1,0 +1,17 @@
+---
+# handlers file for ansible-role-influxdb
+
+- name: start influxdb
+  service:
+    name: influxdb
+    state: started
+
+- name: stop influxdb.
+  service:
+    name: influxdb
+    state: stopped
+
+- name: restart influxdb
+  service:
+    name: influxdb
+    state: restarted
