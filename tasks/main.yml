@@ -57,23 +57,19 @@
     dest: /etc/influxdb/influxdb.conf
   register: influxdb_config
 
-- name: Ensure InfluxDB log path is present.
+- name: Ensure InfluxDB paths are present.
   file:
-    path: "{{ influxdb_log_path }}"
+    path: "{{ item }}"
     state: directory
     owner: "{{ influxdb_user }}"
     group: "{{ influxdb_group }}"
     recurse: True
     mode: 0750
-
-- name: Ensure InfluxDB data path is present.
-  file:
-    path: "{{ influxdb_data_dir }}"
-    state: directory
-    owner: "{{ influxdb_user }}"
-    group: "{{ influxdb_group }}"
-    recurse: True
-    mode: 0750
+  with_items:
+    - "{{ influxdb_meta_data_dir }}"
+    - "{{ influxdb_data_dir }}"
+    - "{{ influxdb_data_wal_dir }}"
+    - "{{ influxdb_log_path }}"
 
 - name: Restart InfluxbDB and enable InfluxDB at boot.
   service:
