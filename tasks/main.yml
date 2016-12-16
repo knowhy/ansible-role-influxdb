@@ -23,7 +23,7 @@
     - name: Ensure Systemd unit file is present.
       template:
         src: influxdb.service.j2
-        dest: /usr/lib/systemd/user/influxdb.service
+        dest: /etc/systemd/system/influxdb.service
 
     - name: Ensure InfluxDB is enabled at boot.
       systemd:
