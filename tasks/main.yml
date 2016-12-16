@@ -1,14 +1,16 @@
 ---
 # tasks file for ansible-role-influxdb
 
-- name: Include OS-specific variables.
-  include_vars: "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+- name: Ensure ca-certificates is updated.
+  package:
+    name: ca-certificates
+    state: latest
+    update_cache: True
 
 - name: Download InfluxDB binary.
   get_url:
     url: "https://dl.influxdata.com/influxdb/releases/influxdb-{{ influxdb_version }}_linux_{{ influxdb_cpu_arch }}.tar.gz"
     dest: "/opt/influxdb-{{ influxdb_version }}_linux_{{ influxdb_cpu_arch }}.tar.gz"
-    validate_certs: "{{ influxdb_validate_cert }}"
 
 - name: Extract InfluxDB binary.
   unarchive:
