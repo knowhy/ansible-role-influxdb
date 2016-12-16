@@ -16,6 +16,8 @@ galaxy_info:
   - name: CentOS
     versions:
       - 7
+  categories:
+    - database
 
   galaxy_tags:
     - influxdb
