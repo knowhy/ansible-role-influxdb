@@ -2,7 +2,6 @@
 # defaults file for ansible-role-influxdb
 
 influxdb_version: 0.13.0
-influxdb_validate_cert: False
 
 influxdb_user: influxdb
 influxdb_group: influxdb
