@@ -6,8 +6,6 @@ influxdb_version: 0.13.0
 influxdb_user: influxdb
 influxdb_group: influxdb
 
-influxdb_cpu_arch: amd64
-
 influxdb_cmd_options:
 
 influxdb_data_path: /var/lib/influxdb

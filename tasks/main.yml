@@ -4,6 +4,18 @@
 - name: Include OS-specific variables.
   include_vars: "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
 
+- set_fact:
+    influxdb_cpu_arch: armhf
+  when: ansible_architecture | search("arm")
+
+- set_fact:
+    influxdb_cpu_arch: amd64
+  when: ansible_architecture | search("amd")
+
+- set_fact:
+    influxdb_cpu_arch: i386
+  when: ansible_architecture | search("i386")
+
 - name: Download InfluxDB binary.
   get_url:
     url: "https://dl.influxdata.com/influxdb/releases/influxdb-{{ influxdb_version }}_linux_{{ influxdb_cpu_arch }}.tar.gz"
