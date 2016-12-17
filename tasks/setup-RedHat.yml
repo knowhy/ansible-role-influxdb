@@ -1,0 +1,9 @@
+---
+
+- set_fact:
+    influxdb_cpu_arch: x86_64
+  when: ansible_architecture | search("amd")
+
+- name: Install influxdb package.
+  yum:
+    name: "wget https://dl.influxdata.com/influxdb/releases/influxdb-{{ influxdb_version }}.{{ influxdb_cpu_arch }}.rpm"

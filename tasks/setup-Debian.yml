@@ -1,0 +1,9 @@
+---
+
+- set_fact:
+    influxdb_cpu_arch: amd64
+  when: ansible_architecture | search("amd")
+
+- name: Install influxdb package.
+  apt:
+    deb: "https://dl.influxdata.com/influxdb/releases/influxdb_{{ influxdb_version }}_{{ influxdb_cpu_arch }}.deb"

@@ -1,0 +1,60 @@
+---
+
+- set_fact:
+    influxdb_cpu_arch: armhf
+  when: ansible_architecture | search("arm")
+
+- set_fact:
+    influxdb_cpu_arch: i386
+  when: ansible_architecture | search("i386")
+
+- set_fact:
+    influxdb_cpu_arch: amd64
+  when: ansible_architecture | search("amd")
+
+- name: Download InfluxDB binary.
+  get_url:
+    url: "https://dl.influxdata.com/influxdb/releases/influxdb-{{ influxdb_version }}_linux_{{ influxdb_cpu_arch }}.tar.gz"
+    dest: "/opt/influxdb-{{ influxdb_version }}_linux_{{ influxdb_cpu_arch }}.tar.gz"
+    validate_certs: "{{ influxdb_validate_cert }}"
+
+- name: Extract InfluxDB binary.
+  unarchive:
+    src: "/opt/influxdb-{{ influxdb_version }}_linux_{{ influxdb_cpu_arch }}.tar.gz"
+    dest: /opt/
+    copy: False
+    
+- name: Create InfluxDB user.
+  user:
+    name: "{{ influxdb_user }}"
+    state: present
+    system: True
+
+- block:
+
+    - name: Ensure Systemd unit file is present.
+      template:
+        src: influxdb.service.j2
+        dest: /etc/systemd/system/influxdb.service
+
+    - name: Ensure InfluxDB is enabled at boot.
+      systemd:
+        name: influxdb
+        daemon_reload: True
+        enabled: True
+
+  when: ansible_service_mgr == 'systemd'
+
+- name: Ensure sysv init script is present.
+  template:
+    src: influxdb.init.j2
+    dest: /etc/init.d/influxdb
+    mode: 0700  
+  when: ansible_service_mgr == 'sysv'
+
+- name: Ensure upstart script is present.
+  template:
+    src: influxdb.upstart.j2
+    dest: /etc/init/influxdb.conf
+    mode: 0700
+  when: ansible_service_mgr == 'upstart'
