@@ -41,12 +41,13 @@
       template:
         src: influxdb.service.j2
         dest: /etc/systemd/system/influxdb.service
+      register: unit_file
 
-    - name: Ensure InfluxDB is enabled at boot.
+    - name: Reload systemd.
       systemd:
         name: influxdb
         daemon_reload: True
-        enabled: True
+      when: unit_file.changed
 
   when: ansible_service_mgr == 'systemd'
 
@@ -64,11 +65,10 @@
     mode: 0700
   when: ansible_service_mgr == 'upstart'
 
-- name: Set command options.
-  template:
-    src: influxdb.j2
-    dest: /etc/default/influxdb
-  register: influxdb_cmd_options
+- name: Enable InfluxDB at boot.
+  service:
+    name: influxdb
+    enabled: True
 
 - name: Ensure InfluxDB configuration directory is present.
   file:
@@ -106,4 +106,4 @@
     name: influxdb
     state: restarted
     enabled: True
-  when: "{{ influxdb_cmd_options | changed }} or {{ influxdb_config | changed }}"
+  when: "{{ influxdb_config | changed }}"
