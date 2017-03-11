@@ -6,8 +6,6 @@ influxdb_version: 1.2.0
 influxdb_user: influxdb
 influxdb_group: influxdb
 
-influxdb_cmd_options:
-
 influxdb_data_path: /var/lib/influxdb
 
 influxdb_log_path: /var/log/influxdb
