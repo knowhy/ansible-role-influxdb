@@ -23,7 +23,7 @@
     dest: "/opt/influxdb-{{ influxdb_version }}_linux_{{ influxdb_cpu_arch | default('amd64') }}.tar.gz"
     validate_certs: "{{ influxdb_validate_cert | default(False) }}"
 
-- name: Extract InfluxDB binary.
+- name: Unpack InfluxDB binary.
   unarchive:
     src: "/opt/influxdb-{{ influxdb_version }}_linux_{{ influxdb_cpu_arch | default('amd64') }}.tar.gz"
     dest: /opt/
