@@ -21,7 +21,7 @@
   get_url:
     url: "https://dl.influxdata.com/influxdb/releases/influxdb-{{ influxdb_version }}_linux_{{ influxdb_cpu_arch }}.tar.gz"
     dest: "/opt/influxdb-{{ influxdb_version }}_linux_{{ influxdb_cpu_arch }}.tar.gz"
-    validate_certs: "{{ influxdb_validate_cert }}"
+    validate_certs: "{{ influxdb_validate_cert | default(False) }}"
 
 - name: Extract InfluxDB binary.
   unarchive:
