@@ -27,7 +27,7 @@
     src: "/opt/influxdb-{{ influxdb_version }}_linux_{{ influxdb_cpu_arch }}.tar.gz"
     dest: /opt/
     copy: False
-    
+
 - name: Create InfluxDB user.
   user:
     name: "{{ influxdb_user }}"
@@ -53,7 +53,7 @@
   template:
     src: influxdb.init.j2
     dest: /etc/init.d/influxdb
-    mode: 0700  
+    mode: 0700
   when: ansible_service_mgr == 'sysv'
 
 - name: Ensure upstart script is present.
@@ -62,7 +62,7 @@
     dest: /etc/init/influxdb.conf
     mode: 0700
   when: ansible_service_mgr == 'upstart'
-  
+
 - name: Set command options.
   template:
     src: influxdb.j2
@@ -91,7 +91,13 @@
   with_items:
     - "{{ influxdb_meta_data_dir }}"
     - "{{ influxdb_data_dir }}"
+    - "{{ influxdb_data_dir }}/_internal"
+    - "{{ influxdb_data_dir }}/_internal/monitor"
+    - "{{ influxdb_data_dir }}/_internal/monitor/1"
     - "{{ influxdb_data_wal_dir }}"
+    - "{{ influxdb_data_wal_dir }}/_internal"
+    - "{{ influxdb_data_wal_dir }}/_internal/monitor"
+    - "{{ influxdb_data_wal_dir }}/_internal/monitor/1"
     - "{{ influxdb_log_path }}"
 
 - name: Restart InfluxDB and enable InfluxDB at boot.
