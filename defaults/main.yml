@@ -1,7 +1,7 @@
 ---
 # defaults file for ansible-role-influxdb
 
-influxdb_version: 1.1.1
+influxdb_version: 1.2.0
 
 influxdb_user: influxdb
 influxdb_group: influxdb
