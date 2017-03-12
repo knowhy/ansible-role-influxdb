@@ -3,8 +3,8 @@
 
 influxdb_version: 1.2.0
 
-influxdb_user: influxdb
-influxdb_group: influxdb
+influxdb_user: root
+influxdb_group: root
 
 influxdb_data_path: /var/lib/influxdb
 
