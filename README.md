@@ -427,7 +427,7 @@ Example Playbook
 License
 -------
 
-MIT / BSD
+agpl-3.0
 
 Author Information
 ------------------
