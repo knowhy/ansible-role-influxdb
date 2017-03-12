@@ -17,8 +17,7 @@ Environment='STDERR={{ influxdb_log_path }}/{{ influxdb_log_stderr_file }}'
 {% else %}
 Environment='STDERR=/dev/null'
 {% endif %}
-EnvironmentFile=-/etc/default/influxdb
-ExecStart=/bin/sh -c "/opt/influxdb-{{ influxdb_version }}-1/usr/bin/influxd -config /etc/influxdb/influxdb.conf ${INFLUXD_OPTS} >>${STDOUT} 2>>${STDERR}"
+ExecStart=/bin/sh -c /opt/influxdb-{{ influxdb_version }}-1/usr/bin/influxd -config /etc/influxdb/influxdb.conf >>${STDOUT} 2>>${STDERR}
 KillMode=control-group
 Restart=on-failure
 Type=fork

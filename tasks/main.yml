@@ -3,22 +3,72 @@
 
 - name: Include OS-specific variables.
   include_vars: "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+  ignore_errors: True
 
-# Setup/install tasks.
-- include: setup-RedHat.yml
-  when: ansible_os_family == 'RedHat'
+- set_fact:
+    influxdb_cpu_arch: armhf
+  when: ansible_architecture | search("arm")
 
-- include: setup-Debian.yml
-  when: ansible_os_family == 'Debian'
+- set_fact:
+    influxdb_cpu_arch: amd64
+  when: ansible_architecture | search("amd")
 
-- include: setup-Other.yml
-  when: ansible_os_family != 'Debian' or ansible_os_family != 'RedHat'
-  
-- name: Set command options.
+- set_fact:
+    influxdb_cpu_arch: i386
+  when: ansible_architecture | search("i386")
+
+- name: Download InfluxDB binary.
+  get_url:
+    url: "https://dl.influxdata.com/influxdb/releases/influxdb-{{ influxdb_version }}_linux_{{ influxdb_cpu_arch | default('amd64') }}.tar.gz"
+    dest: "/opt/influxdb-{{ influxdb_version }}_linux_{{ influxdb_cpu_arch | default('amd64') }}.tar.gz"
+    validate_certs: "{{ influxdb_validate_cert | default(False) }}"
+
+- name: Unpack InfluxDB binary.
+  unarchive:
+    src: "/opt/influxdb-{{ influxdb_version }}_linux_{{ influxdb_cpu_arch | default('amd64') }}.tar.gz"
+    dest: /opt/
+    copy: False
+
+- name: Create InfluxDB user.
+  user:
+    name: "{{ influxdb_user }}"
+    state: present
+    system: True
+
+- block:
+
+    - name: Ensure Systemd unit file is present.
+      template:
+        src: influxdb.service.j2
+        dest: /etc/systemd/system/influxdb.service
+      register: unit_file
+
+    - name: Reload systemd.
+      systemd:
+        name: influxdb
+        daemon_reload: True
+      when: unit_file.changed
+
+  when: ansible_service_mgr == 'systemd'
+
+- name: Ensure sysv init script is present.
   template:
-    src: influxdb.j2
-    dest: /etc/default/influxdb
-  register: influxdb_cmd_options
+    src: influxdb.init.j2
+    dest: /etc/init.d/influxdb
+    mode: 0700
+  when: ansible_service_mgr == 'sysv'
+
+- name: Ensure upstart script is present.
+  template:
+    src: influxdb.upstart.j2
+    dest: /etc/init/influxdb.conf
+    mode: 0700
+  when: ansible_service_mgr == 'upstart'
+
+- name: Enable InfluxDB at boot.
+  service:
+    name: influxdb
+    enabled: True
 
 - name: Ensure InfluxDB configuration directory is present.
   file:
@@ -42,7 +92,13 @@
   with_items:
     - "{{ influxdb_meta_data_dir }}"
     - "{{ influxdb_data_dir }}"
+    - "{{ influxdb_data_dir }}/_internal"
+    - "{{ influxdb_data_dir }}/_internal/monitor"
+    - "{{ influxdb_data_dir }}/_internal/monitor/1"
     - "{{ influxdb_data_wal_dir }}"
+    - "{{ influxdb_data_wal_dir }}/_internal"
+    - "{{ influxdb_data_wal_dir }}/_internal/monitor"
+    - "{{ influxdb_data_wal_dir }}/_internal/monitor/1"
     - "{{ influxdb_log_path }}"
 
 - name: Restart InfluxDB and enable InfluxDB at boot.
@@ -50,4 +106,4 @@
     name: influxdb
     state: restarted
     enabled: True
-  when: "{{ influxdb_cmd_options | changed }} or {{ influxdb_config | changed }}"
+  when: "{{ influxdb_config | changed }}"

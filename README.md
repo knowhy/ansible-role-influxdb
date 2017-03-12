@@ -210,7 +210,7 @@ Bind address and port for the http endpoint, defaults to `:8086`.
 
 	influxdb_http_bind_address: ":8086"
 
-Whether to enable authentification for the http endpoint, boolean, defaults to `False`. 
+Whether to enable authentification for the http endpoint, boolean, defaults to `False`.
 
 	influxdb_http_auth_enabled: False
 
@@ -411,10 +411,6 @@ Whether to enable continuous queries, boolean, defaults to `True`.
 Run interval for continuous queries, interval for how often continuous queries will be checked if they need to run, defaults to `1s`.
 
 	influxdb_continuous_queries_run_interval: "1s"
-
-Extra cmd options wich will be added to to start command, defaults to ` `.
-
-	influxdb_cmd_options:
 
 Dependencies
 ------------
