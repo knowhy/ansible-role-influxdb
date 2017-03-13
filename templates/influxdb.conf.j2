@@ -21,8 +21,8 @@ hostname = "{{ influxdb_hostname }}"
   cache-snapshot-memory-size = {{ influxdb_data_cache_snapshot_memory_size }}
   cache-snapshot-write-cold-duration = "{{ influxdb_data_cache_snapshot_write_cold_duration }}"
   compact-full-write-cold-duration = "{{ influxdb_data_compact_full_write_cold_duration }}"
-max-series-per-database = {{ influxdb_data_max_series_per_database }}
-max-values-per-tag = {{ influxdb_data_max_values_per_tag }}
+  max-series-per-database = {{ influxdb_data_max_series_per_database }}
+  max-values-per-tag = {{ influxdb_data_max_values_per_tag }}
 
 {% if influxdb_coordinator %}
 [coordinator]
@@ -65,7 +65,7 @@ max-values-per-tag = {{ influxdb_data_max_values_per_tag }}
   pprof-enabled = {{ influxdb_http_pprof_enabled | bool | lower }}
   https-enabled = {{ influxdb_http_https_enabled | bool | lower }}
   https-private-key = "{{ influxdb_http_https_private_key }}"
-https-certificate = "{{ influxdb_http_https_certificate }}"
+  https-certificate = "{{ influxdb_http_https_certificate }}"
   shared-sercret = "{{ influxdb_http_https_shared_secret }}"
   max-row-limit = {{ influxdb_http_max_row_limit }}
   max-connection-limit = {{ influxdb_http_max_connection_limit }}
