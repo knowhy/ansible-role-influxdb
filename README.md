@@ -24,7 +24,7 @@ Role Variables
 
 Available variables are listed below, along with default values (see `defaults/main.yml`):
 
-    influxdb_version: 0.13.0
+    influxdb_version: 1.2.0
 
 InfluxDB version to deploy.
 
