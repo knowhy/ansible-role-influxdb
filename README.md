@@ -70,18 +70,6 @@ Whether to enable meta data logging, boolean, defaults to `True`.
 
 	influxdb_meta_logging_enabled: True
 
-Whether to enable `pprof` for meta data, boolean, defaults to `False`.
-
-	influxdb_meta_pprof_enabled: False
-
-The default duration for leases, defaults to `1m0s`.
-
-	influxdb_meta_lease_duration: 1m0s
-
-Whether the node should hold time series data shards in the cluster, boolean, defaults to `True`.
-
-	influxdb_data_cluster: True
-
 Directory to store data, defaults to `/var/lib/influxdb/data`.
 
 	influxdb_data_dir: /var/lib/influxdb/data
@@ -90,13 +78,9 @@ Directory for the `WAL` storage engine, defaults to `/var/lib/influxdb/wal`.
 
 	influxdb_data_wal_dir: "/var/lib/influxdb/wal"
 
-Whether to enable `WAL` logging, boolean, defaults to `True`.
+Trace logging provides more verbose output around the tsm engine. Turning this on can provide more useful output for debugging tsm engine issues. Boolean, defaults to `False`.
 
-	influxdb_data_wal_logging_enabled: True
-
-Whether to enable data logging, boolean, defaults to `True`.
-
-	influxdb_data_data_logging_enabled: True
+	influxdb_data_trace_logging_enabled: False
 
 Whether queries should be logged before execution, boolean, defaults to `False`.
 
@@ -114,17 +98,13 @@ The length of time at which the engine will snapshot the cache and write it to a
 
 	influxdb_data_cache_snapshot_write_cold_duration: 1h
 
-The minimum number of TSM files that need to exist before a compaction cycle will run, defaults to `3`.
-
-	influxdb_data_compact_min_file_count: 3
-
 The duration at which the engine will compact all TSM files in a shard if it hasn't received a write or delete, defaults to `24h`.
 
 	influxdb_data_compact_full_write_cold_duration: 24h
 
-The maximum points per block, defaults to `1000`.
+The maximum series allowed per database before writes are dropped. This limit can prevent high cardinality issues at the database level. This limit can be disabled by setting it to 0.
 
-	influxdb_data_max_points_per_block: 1000
+	influxdb_data_max_series_per_database: 1000000
 
 The default time a write request will wait until a "timeout" error is returned to the caller.
 
@@ -218,6 +198,10 @@ Whether to enable logging for the http endpoint, boolean, defaults to `True`.
 
 	influxdb_http_log_enabled: True
 
+The default realm sent back when issuing a basic auth challenge. Defaults to `InfluxDB`.
+
+  influxdb_http_realm: InfluxDB
+
 Whether to enable write tracing for the http endpoint, boolean, defaults to `False`.
 
 	influxdb_http_write_tracing: False
@@ -234,9 +218,53 @@ Path to certificate for TLS for the http endpoint, defaults to `/etc/ssl/influxd
 
 	influxdb_http_https_certificate: "/etc/ssl/influxdb.pem"
 
+Use a separate private key location.
+
+	influxdb_http_https_private_key: []
+
+The JWT auth shared secret to validate requests using JSON web tokens.
+
+	influxdb_http_https_shared_secret: []
+
 Max row limit for the http endpoint, defaults to `10000`.
 
 	influxdb_http_max_row_limit: 10000
+
+The maximum number of HTTP connections that may be open at once.  New connections that would exceed this limit are dropped.  Setting this value to `0` disables the limit. Defaults to `0`.
+
+	influxdb_http_max_connection_limit: 0
+
+Enable http service over unix domain socket. Boolean. Defaults to `False`.
+
+	influxdb_http_unix_socket_enabled: False
+
+The path of the unix domain socket. Defaults to `/var/run/influxdb.sock`.
+
+	influxdb_http_bind_socket: /var/run/influxdb.sock
+
+Determines whether the subscriber service is enabled. Boolean. Defaults to `True`.
+
+	influxdb_subscriber_enabled: True
+
+The default timeout for HTTP writes to subscribers. Defaults to `30s`.
+
+	influxdb_subscriber_http_timeout: 30s
+
+Allows insecure HTTPS connections to subscribers. This is useful when testing with self-signed certificates. Boolean. Defaults to `False`.
+
+	influxdb_subscriber_insecure_skip_verify: False
+
+The path to the PEM encoded CA certs file. If the empty string, the default system certs will be used. Defaults to `[]`.
+
+	influxdb_subscriber_ca_certs: []
+
+The number of writer goroutines processing the write channel. Defaults to `40`.
+
+	influxdb_subscriber_write_concurrency: 40
+
+The number of in-flight writes buffered in the write channel. Defaults to `1000`.
+
+	influxdb_subscriber_write_buffer_size: 1000
 
 Wheter to enable Graphite, boolean, defaults to `False`.
 
@@ -260,7 +288,7 @@ Graphite consistency level, defaults to `one`.
 
 Graphite batching will flush if this many points get buffered, defaults to `5000`.
 
-	influxdb_graphite_batch-size: 5000
+	influxdb_graphite_batch_size: 5000
 
 Graphite number of batches that may be pending in memory, defaults to `10`.
 
@@ -278,9 +306,11 @@ Graphite string to join multiple matching 'measurement' values providing more co
 
 	influxdb_graphite_separator: "."
 
-Graphite default tags that will be added to all metrics. These can be overridden at the template level or by tags extracted from metric, defaults to `["region=us-east", "zone=1c"]`.
+Graphite default tags that will be added to all metrics. These can be overridden at the template level or by tags extracted from metric. List. Defaults to `["region=us-east", "zone=1c"]`.
 
-	influxdb_graphite_tags: '["region=us-east", "zone=1c"]'
+	influxdb_graphite_tags:
+	 - region=us-east
+	 - zone=1c
 
 Graphite templates. Each template line requires a template pattern.  It can have an optional filter before the template and separated by spaces.  It can also have optional extra tags following the template.  Multiple tags should be separated by commas and no spaces similar to the line protocol format.  There can be only one default template.
 
@@ -300,9 +330,21 @@ Collectd database to use, defaults to ` `.
 
 	influxdb_collectd_database: ""
 
+Retention policy for collectd. Defaults to `[]`.
+
+	influxdb_collectd_retention_policy: []
+
 Collect typesdb to use, defaults to ` `.
 
 	influxdb_collectd_typesdb: ""
+
+Security level for collectd. Defaults to `none`.
+
+	influxdb_collectd_security_level: none
+
+Auth file for collectd. Defaults to `/etc/collectd/auth_file`.
+
+	influxdb_collectd_auth_file: /etc/collectd/auth_file
 
 Collectd batch size, will flush if this many points get buffered, defaults to `1000`.
 
@@ -395,10 +437,6 @@ Batch timeout for UDP, will flush at least this often even if we haven't hit buf
 UDP Read buffer size, `0` means OS default. UDP listener will fail if set above OS max, defaults to `0`.
 
 	influxdb_udp_read_buffer: 0
-
-Set the expected UDP payload size; lower values tend to yield better performance, max is UDP size `65536`, defaults to `65536`.
-
-	influxdb_udp_payload_size: 65536
 
 Whether to enable continuous queries log, boolean, defaults to `True`.
 

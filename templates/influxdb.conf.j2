@@ -21,10 +21,6 @@ hostname = "{{ influxdb_hostname }}"
 
   # If log messages are printed for the meta service
   logging-enabled = {{ influxdb_meta_logging_enabled | bool | lower }}
-  pprof-enabled = {{ influxdb_meta_pprof_enabled | bool | lower }}
-
-  # The default duration for leases.
-  lease-duration = "{{ influxdb_meta_lease_duration }}"
 
 ###
 ### [data]
@@ -36,15 +32,15 @@ hostname = "{{ influxdb_hostname }}"
 ###
 
 [data]
-  # Controls if this node holds time series data shards in the cluster
-  enabled = {{ influxdb_data_cluster | bool | lower }}
 
   dir = "{{ influxdb_data_dir }}"
 
   # These are the WAL settings for the storage engine >= 0.9.3
   wal-dir = "{{ influxdb_data_wal_dir }}"
-  wal-logging-enabled = {{ influxdb_data_wal_logging_enabled | bool | lower }}
-  data-logging-enabled = {{ influxdb_data_data_logging_enabled | bool | lower }}
+
+  # Trace logging provides more verbose output around the tsm engine. Turning
+  # this on can provide more useful output for debugging tsm engine issues.
+  trace-logging-enabled = {{ influxdb_data_trace_logging_enabled | bool | lower }}
 
   # Whether queries should be logged before execution. Very useful for troubleshooting, but will
   # log any sensitive data contained within a query.
@@ -65,19 +61,21 @@ hostname = "{{ influxdb_hostname }}"
   # a new TSM file if the shard hasn't received writes or deletes
   cache-snapshot-write-cold-duration = "{{ influxdb_data_cache_snapshot_write_cold_duration }}"
 
-  # MinCompactionFileCount is the minimum number of TSM files
-  # that need to exist before a compaction cycle will run
-  compact-min-file-count = {{ influxdb_data_compact_min_file_count }}
-
   # CompactFullWriteColdDuration is the duration at which the engine
   # will compact all TSM files in a shard if it hasn't received a
   # write or delete
   compact-full-write-cold-duration = "{{ influxdb_data_compact_full_write_cold_duration }}"
 
-  # MaxPointsPerBlock is the maximum number of points in an encoded
-  # block in a TSM file. Larger numbers may yield better compression
-  # but could incur a performance penalty when querying
-  max-points-per-block = {{ influxdb_data_max_points_per_block }}
+  # The maximum series allowed per database before writes are dropped.  This limit can prevent
+  # high cardinality issues at the database level.  This limit can be disabled by setting it to
+  # 0.
+max-series-per-database = {{ influxdb_data_max_series_per_database }} 1000000
+
+  # The maximum number of tag values per tag that are allowed before writes are dropped.  This limit
+  # can prevent high cardinality tag values from being written to a measurement.  This limit can be
+  # disabled by setting it to 0.
+  # max-values-per-tag = 100000
+
 
 ###
 ### [coordinator]
@@ -127,7 +125,7 @@ hostname = "{{ influxdb_hostname }}"
 ### this retention policy is configured as the default for the database.
 
 [monitor]
-  store-enabled = {{ influxdb_monitor_store_enabled | bool | lower }} # Whether to record statistics internally. 
+  store-enabled = {{ influxdb_monitor_store_enabled | bool | lower }} # Whether to record statistics internally.
   store-database = "{{ influxdb_monitor_store_database }}" # The destination database for recorded statistics
   store-interval = "{{ influxdb_monitor_store_interval }}" # The interval at which to record statistics
 
@@ -154,12 +152,34 @@ hostname = "{{ influxdb_hostname }}"
   enabled = {{ influxdb_http_enabled | bool | lower }}
   bind-address = "{{ influxdb_http_bind_address }}"
   auth-enabled = {{ influxdb_http_auth_enabled | bool | lower }}
+  # The default realm sent back when issuing a basic auth challenge.
+  realm = "{{ influxdb_http_realm }}"
   log-enabled = {{ influxdb_http_log_enabled | bool | lower }}
   write-tracing = {{ influxdb_http_write_tracing | bool | lower }}
   pprof-enabled = {{ influxdb_http_pprof_enabled | bool | lower }}
   https-enabled = {{ influxdb_http_https_enabled | bool | lower }}
-  https-certificate = "{{ influxdb_http_https_certificate }}"
+  https-private-key = "{{ influxdb_http_https_private_key }}"
+https-certificate = "{{ influxdb_http_https_certificate }}"
+  shared-sercret = "{{ influxdb_http_https_shared_secret }}"
   max-row-limit = {{ influxdb_http_max_row_limit }}
+  max-connection-limit = {{ influxdb_http_max_connection_limit }}
+  unix-socket-enabled = {{ influxdb_http_unix_socket_enabled | bool | lower }}
+  bind-socket = "{{ influxdb_http_bind_socket }}"
+
+###
+### [subscriber]
+###
+### Controls the subscriptions, which can be used to fork a copy of all data
+### received by the InfluxDB host.
+###
+
+[subscriber]
+  enabled = {{ influxdb_subscriber_enabled }}
+  http-timeout = "{{ influxdb_subscriber_http_timeout }}"
+  insecure-skip-verify = {{ influxdb_subscriber_insecure_skip_verify | bool | lower }}
+  ca-certs = "{{ influxdb_subscriber_ca_certs }}"
+  write-concurrency = {{ influxdb_subscriber_write_concurrency }}
+  write-buffer-size = {{ influxdb_subscriber_write_buffer_size }}
 
 ###
 ### [[graphite]]
@@ -185,10 +205,16 @@ hostname = "{{ influxdb_hostname }}"
   udp-read-buffer = {{ influxdb_graphite_udp_read_buffer }}
 
 {% if influxdb_graphite_separator is defined %}
-
   separator = "{{ influxdb_graphite_separator }}"
-
 {% endif %}
+
+  tags = [{% for tag in influxdb_graphite_tags %}"{{ tag }}"    {% if !loop.last %},{% endif %}{% endfor %}]
+
+  templates = [
+{% for template in influxdb_graphite_templates %}
+  "{{ template }}"
+  {% endfor %}
+  ]
 {% endif %}
 
 ###
@@ -202,12 +228,16 @@ hostname = "{{ influxdb_hostname }}"
 {% if influxdb_collectd_enabled == true %}
   bind-address = "{{ influxdb_collectd_bind_address }}"
   database = "{{ influxdb_collectd_database }}"
+  retention-policy = "{{ influxdb_collectd_retention_policy }}"
   typesdb = "{{ influxdb_collectd_typesdb }}"
 
-  # batch-size = {{ influxdb_collectd_batch_size }}
-  # batch-pending = {{ influxdb_collectd_batch_pending }}
-  # batch-timeout = "{{ influxdb_collectd_batch_timeout }}"
-  # read-buffer = {{ influxdb_collectd_read_buffer }}
+  security-level = "{{ influxdb_collectd_security_level }}"
+  auth-file = "{{ influxdb_collectd_auth_file }}"
+
+  batch-size = {{ influxdb_collectd_batch_size }}
+  batch-pending = {{ influxdb_collectd_batch_pending }}
+  batch-timeout = "{{ influxdb_collectd_batch_timeout }}"
+  read-buffer = {{ influxdb_collectd_read_buffer }}
 
 {% endif %}
 ###
@@ -239,11 +269,10 @@ hostname = "{{ influxdb_hostname }}"
   database = "{{ influxdb_udp_database }}"
   retention-policy = "{{ influxdb_udp_retention_policy }}"
 {% if influxdb_udp_enabled == true %}
-  batch-size = {{ influxdb_udp_batch_size }} 
+  batch-size = {{ influxdb_udp_batch_size }}
   batch-pending = {{ influxdb_udp_batch_pending }}
   batch-timeout = {{ influxdb_udp_batch_batch_timeout }}
   read-buffer = {{ influxdb_udp_read_buffer }}
-  udp-payload-size = {{ influxdb_udp_payload_size }}
 {% endif %}
 
 ###

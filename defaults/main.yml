@@ -22,21 +22,16 @@ influxdb_hostname: localhost
 influxdb_meta_data_dir: /var/lib/influxdb/meta
 influxdb_meta_retention_autocreate: True
 influxdb_meta_logging_enabled: True
-influxdb_meta_pprof_enabled: False
-influxdb_meta_lease_duration: 1m0s
 
-influxdb_data_cluster: True
+influxdb_data_trace_logging_enabled: False
+
 influxdb_data_dir: /var/lib/influxdb/data
 influxdb_data_wal_dir: "/var/lib/influxdb/wal"
-influxdb_data_wal_logging_enabled: True
-influxdb_data_data_logging_enabled: True
 influxdb_data_data_query_log_enabled: False
 influxdb_data_cache_max_memory_size: 524288000
 influxdb_data_cache_snapshot_memory_size: 26214400
 influxdb_data_cache_snapshot_write_cold_duration: 1h
-influxdb_data_compact_min_file_count: 3
 influxdb_data_compact_full_write_cold_duration: 24h
-influxdb_data_max_points_per_block: 1000
 
 influxdb_coordinator: False
 influxdb_coordinator_write_timeout: 10s
@@ -67,12 +62,23 @@ influxdb_admin_https_certificate: "/etc/ssl/influxdb.pem"
 influxdb_http_enabled: True
 influxdb_http_bind_address: ":8086"
 influxdb_http_auth_enabled: False
+influxdb_http_realm: InfluxDB
 influxdb_http_log_enabled: True
 influxdb_http_write_tracing: False
 influxdb_http_pprof_enabled: False
 influxdb_http_https_enabled: False
 influxdb_http_https_certificate: "/etc/ssl/influxdb.pem"
+influxdb_http_https_private_key: []
+influxdb_http_https_shared_secret: []
 influxdb_http_max_row_limit: 10000
+influxdb_http_max_connection_limit: 0
+
+influxdb_subscriber_enabled: True
+influxdb_subscriber_http_timeout: 30s
+influxdb_subscriber_insecure_skip_verify: False
+influxdb_subscriber_ca_certs: []
+influxdb_subscriber_write_concurrency: 40
+influxdb_subscriber_write_buffer_size: 1000
 
 influxdb_graphite_enabled: False
 influxdb_graphite_database: graphite
@@ -94,7 +100,10 @@ influxdb_graphite_templates:
 influxdb_collectd_enabled: False
 influxdb_collectd_bind_address: ""
 influxdb_collectd_database: ""
+influxdb_collectd_retention_policy: []
 influxdb_collectd_typesdb: ""
+influxdb_collectd_security_level: none
+influxdb_collectd_auth_file: /etc/collectd/auth_file
 influxdb_collectd_batch_size: 1000
 influxdb_collectd_batch_pending: 5
 influxdb_collectd_batch_timeout: 1s
@@ -120,7 +129,6 @@ influxdb_udp_batch_size: 1000
 influxdb_udp_batch_pending: 5
 influxdb_udp_batch_batch_timeout: "1s"
 influxdb_udp_read_buffer: 0
-influxdb_udp_payload_size: 65536
 
 influxdb_continuous_queries_log_enabled: True
 influxdb_continuous_queries_enabled: True
