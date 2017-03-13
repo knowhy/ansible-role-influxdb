@@ -106,6 +106,10 @@ The maximum series allowed per database before writes are dropped. This limit ca
 
 	influxdb_data_max_series_per_database: 1000000
 
+The maximum number of tag values per tag that are allowed before writes are dropped. This limit can prevent high cardinality tag values from being written to a measurement. This limit can be disabled by setting it to `0`. Defaults to `100000`.
+
+	influxdb_data_max_values_per_tag: 100000
+
 The default time a write request will wait until a "timeout" error is returned to the caller.
 
 	influxdb_coordinator_write_timeout: 10s

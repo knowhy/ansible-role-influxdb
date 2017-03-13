@@ -32,6 +32,8 @@ influxdb_data_cache_max_memory_size: 524288000
 influxdb_data_cache_snapshot_memory_size: 26214400
 influxdb_data_cache_snapshot_write_cold_duration: 1h
 influxdb_data_compact_full_write_cold_duration: 24h
+influxdb_data_max_series_per_database: 1000000
+influxdb_data_max_values_per_tag: 100000
 
 influxdb_coordinator: False
 influxdb_coordinator_write_timeout: 10s
