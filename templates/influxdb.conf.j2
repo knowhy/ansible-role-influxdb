@@ -1,4 +1,4 @@
-# {{ ansible_managed }}
+### {{ ansible_managed }}
 
 reporting-disabled = {{ influxdb_reporting_disabled | bool | lower }}
 
@@ -96,7 +96,7 @@ https-certificate = "{{ influxdb_http_https_certificate }}"
   separator = "{{ influxdb_graphite_separator }}"
 {% endif %}
 
-  tags = [{% for tag in influxdb_graphite_tags %}"{{ tag }}"    {% if !loop.last %},{% endif %}{% endfor %}]
+  tags = [{% for tag in influxdb_graphite_tags %}"{{ tag }}"    {% if not loop.last %},{% endif %}{% endfor %}]
 
   templates = [
 {% for template in influxdb_graphite_templates %}
