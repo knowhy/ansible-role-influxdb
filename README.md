@@ -28,8 +28,8 @@ Available variables are listed below, along with default values (see `defaults/m
 
 InfluxDB version to deploy.
 
-    influxdb_user: influxdb
-	influxdb_group: influxdb
+    influxdb_user: root
+	influxdb_group: root
 
 The user and group under which InfluxDB server will run. Defaults to `influxdb`.
 
@@ -427,7 +427,7 @@ Example Playbook
 License
 -------
 
-MIT / BSD
+agpl-3.0
 
 Author Information
 ------------------
